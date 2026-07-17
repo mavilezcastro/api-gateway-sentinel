@@ -149,7 +149,7 @@ docker-compose.yml
 
 ## Autor
 
-**Manuel Avilez** — Backend Developer Junior | Estudiante de Ciberseguridad
+**Marco Avilez** — Backend Developer Junior | Estudiante de Ciberseguridad
 
 ## Licencia
 
