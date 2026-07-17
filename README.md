@@ -1,100 +1,44 @@
 # API Gateway & Sentinel
 
-API Gateway minimalista con enfoque en ciberseguridad backend, construido con **Python 3.12**, **FastAPI** y **Redis**.
+API Gateway minimalista con enfoque en **ciberseguridad backend**, construido con Python 3.12, FastAPI y Redis.
 
-Proyecto de portfolio para demostrar conocimientos en desarrollo backend seguro, rate limiting, autenticación JWT y defensa contra inyecciones (OWASP Top 10).
+Proyecto de portfolio que demuestra capas de seguridad en un gateway: filtro de inyección (OWASP), rate limiting, autenticación JWT y arquitectura modular.
 
-## Características
+## Características implementadas
 
-| Estado | Feature |
-|--------|---------|
-| ✅ | Filtro de inyección SQL/NoSQL (middleware OWASP básico) |
-| 🔜 | Rate limiting con Redis |
-| 🔜 | Autenticación JWT |
-| 🔜 | Logs de seguridad |
-| 🔜 | Proxy gateway hacia microservicios |
+| Feature | Descripción |
+|---------|-------------|
+| Filtro de inyección | Middleware que analiza URL y body JSON bloqueando patrones SQL/NoSQL/XSS |
+| Rate limiting | Límite de peticiones por IP usando Redis (ventana fija) |
+| Autenticación JWT | Login con bcrypt + tokens Bearer con expiración |
+| Rutas protegidas | Endpoints que requieren token válido |
+| Docker | Redis 7 vía docker-compose |
 
-## Requisitos
+## Stack tecnológico
+
+- **Python 3.12** · **FastAPI** · **Redis** · **JWT (python-jose)** · **bcrypt (passlib)** · **Docker**
+
+## Requisitos previos
 
 - Python 3.12+
-- pip
+- Docker Desktop (para Redis)
+- Git
 
 ## Instalación
 
 ```bash
-# Clonar el repositorio
-git clone <url-del-repo>
+git clone https://github.com/mavilezcastro/api-gateway-sentinel.git
 cd api-gateway-sentinel
 
-# Crear entorno virtual
 python -m venv .venv
 
-# Activar entorno virtual (Windows)
+# Windows
 .venv\Scripts\activate
 
-# Activar entorno virtual (Linux/macOS)
+# Linux/macOS
 source .venv/bin/activate
 
-# Instalar dependencias
 pip install -r requirements.txt
 
-# Copiar variables de entorno
 copy .env.example .env   # Windows
 cp .env.example .env     # Linux/macOS
-```
-
-## Ejecución
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Documentación interactiva: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-## Endpoints disponibles
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/salud` | Verifica que el servicio está activo |
-| POST | `/eco` | Devuelve el JSON recibido (útil para probar el filtro) |
-
-## Probar el filtro de inyección
-
-```bash
-# Petición limpia (200 OK)
-curl http://localhost:8000/salud
-
-# Inyección en query string (403 Forbidden)
-curl "http://localhost:8000/eco?usuario=admin' OR 1=1--"
-
-# Inyección en body JSON (403 Forbidden)
-curl -X POST http://localhost:8000/eco ^
-  -H "Content-Type: application/json" ^
-  -d "{\"nombre\": \"'; DROP TABLE usuarios;--\"}"
-```
-
-## Estructura del proyecto
-
-```
-app/
-├── main.py                  # Punto de entrada FastAPI
-├── core/
-│   └── config.py            # Configuración centralizada
-├── middleware/
-│   └── filtro_inyeccion.py  # Filtro OWASP de inyección
-└── api/
-    └── rutas/
-        └── salud.py         # Endpoints de prueba
-```
-
-## Roadmap
-
-1. **Paso 1** — Estructura base + filtro de inyección ✅
-2. **Paso 2** — Rate limiting con Redis
-3. **Paso 3** — Autenticación JWT
-4. **Paso 4** — Logs de seguridad
-5. **Paso 5** — Proxy gateway real
-
-## Licencia
-
-MIT
